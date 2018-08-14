@@ -1,14 +1,20 @@
 package ru.leonid.calculator;
 
+import java.io.IOException;
+
 import java.util.Scanner;
 
 public class Main {
-    private final static String EXIT_COMMAND = "exit";
-    private final static String URL = "jdbc:mysql://localhost:3306/calc?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-    private final static String USERNAME = "root";
-    private final static String PASSWORD = "";
+    private  static String EXIT_COMMAND;
+    private  static String URL;
+    private  static String USERNAME;
+    private  static String PASSWORD;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        EXIT_COMMAND= initSQLconfig().loading().getProperty("EXIT_COMMAND");
+        URL = initSQLconfig().loading().getProperty("URL");
+        USERNAME = initSQLconfig().loading().getProperty("USERNAME");
+        PASSWORD = initSQLconfig().loading().getProperty("PASSWORD");
         final Reader reader = initReader();
         final Calculator calculator = initCalculator();
         final DatabaseTemplate databaseTemplate = initDatabase(new DatabaseConfiguration(URL, USERNAME, PASSWORD));
@@ -26,5 +32,8 @@ public class Main {
 
     private static DatabaseTemplate initDatabase(DatabaseConfiguration databaseConfiguration) {
         return new DatabaseTemplate(databaseConfiguration);
+    }
+    private static LoadSQLCongig initSQLconfig(){
+        return new LoadSQLCongig();
     }
 }
