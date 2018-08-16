@@ -1,7 +1,7 @@
 package ru.leonid.calculator;
 
 import java.io.IOException;
-
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Main {
@@ -11,14 +11,10 @@ public class Main {
     private  static String PASSWORD;
 
     public static void main(String[] args) throws IOException {
-        EXIT_COMMAND= initSQLconfig().loading().getProperty("EXIT_COMMAND");
-        URL = initSQLconfig().loading().getProperty("URL");
-        USERNAME = initSQLconfig().loading().getProperty("USERNAME");
-        PASSWORD = initSQLconfig().loading().getProperty("PASSWORD");
+        SQLconfig();
         final Reader reader = initReader();
         final Calculator calculator = initCalculator();
         final DatabaseTemplate databaseTemplate = initDatabase(new DatabaseConfiguration(URL, USERNAME, PASSWORD));
-
         new CalculatorBusinessLogic(reader, calculator, databaseTemplate).work();
     }
 
@@ -33,7 +29,14 @@ public class Main {
     private static DatabaseTemplate initDatabase(DatabaseConfiguration databaseConfiguration) {
         return new DatabaseTemplate(databaseConfiguration);
     }
-    private static LoadSQLCongig initSQLconfig(){
-        return new LoadSQLCongig();
+    private static void SQLconfig() throws IOException {
+        Properties config = initSQLconfig().loading();
+        EXIT_COMMAND= config.getProperty("EXIT_COMMAND");
+        URL = config.getProperty("URL");
+        USERNAME = config.getProperty("USERNAME");
+        PASSWORD = config.getProperty("PASSWORD");
+    }
+    private static LoadSQLConfig initSQLconfig(){
+        return new LoadSQLConfig();
     }
 }
